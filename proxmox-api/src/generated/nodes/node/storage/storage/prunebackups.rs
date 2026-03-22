@@ -33,7 +33,8 @@ where
     #[doc = ""]
     pub async fn get(&self, params: GetParams) -> Result<Vec<GetOutputItems>, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &params).await
+        let optional_vec: Option<Vec<GetOutputItems>> = self.client.get(&path, &params).await?;
+        Ok(optional_vec.unwrap_or_default())
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

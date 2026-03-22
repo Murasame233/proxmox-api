@@ -22,7 +22,8 @@ where
     #[doc = ""]
     pub async fn post(&self, params: PostParams) -> Result<Vec<PostOutputItems>, T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &params).await
+        let optional_vec: Option<Vec<PostOutputItems>> = self.client.post(&path, &params).await?;
+        Ok(optional_vec.unwrap_or_default())
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

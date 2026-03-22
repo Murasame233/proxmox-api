@@ -149,6 +149,15 @@ impl Generator {
 
                         let call = Self::to_call(def.primitive(), &fn_name, defer_signature);
 
+                        let call = if matches!(def, TypeDef::Array(_)) {
+                            quote! {
+                                let optional_vec: Option<#name> = #call?;
+                                Ok(optional_vec.unwrap_or_default())
+                            }
+                        } else {
+                            call
+                        };
+
                         (quote! { -> Result<#name, T::Error> }, call)
                     } else {
                         (

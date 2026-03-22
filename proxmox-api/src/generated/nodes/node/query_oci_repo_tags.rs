@@ -22,7 +22,8 @@ where
     #[doc = ""]
     pub async fn get(&self, params: GetParams) -> Result<Vec<String>, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &params).await
+        let optional_vec: Option<Vec<String>> = self.client.get(&path, &params).await?;
+        Ok(optional_vec.unwrap_or_default())
     }
 }
 impl GetParams {
