@@ -11,6 +11,7 @@ pub enum Error {
     EncounteredErrors(serde_json::Value),
     ResponseWasNotString,
     DecodingFailed(String, serde_json::Error),
+    UrlEncodingFailed(String),
     UnknownFailure(StatusCode),
     Other(&'static str),
 }
@@ -38,7 +39,7 @@ impl Client {
             reqwest::blocking::ClientBuilder::new()
                 .danger_accept_invalid_certs(true)
                 .build()
-                .unwrap(),
+                .expect("failed to build HTTP client"),
         )
     }
 
@@ -161,7 +162,8 @@ impl crate::client::Client for Client {
         let request = self.client.request(method, self.route(path.as_ref()));
 
         let request = if let Some(body) = body {
-            let body = serde_urlencoded::to_string(body).unwrap();
+            let body = serde_urlencoded::to_string(body)
+                .map_err(|e| Error::UrlEncodingFailed(e.to_string()))?;
             request.body(body)
         } else {
             request
