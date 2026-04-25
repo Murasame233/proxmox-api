@@ -1,4 +1,4 @@
-use std::io::BufReader;
+use std::io::Read;
 
 pub mod raw;
 
@@ -48,17 +48,16 @@ fn main() -> std::io::Result<()> {
     let input_path = cli.input_path();
 
     let str = if input_path.ends_with(".xz") {
-        let file = std::fs::OpenOptions::new()
+        let mut file = std::fs::OpenOptions::new()
             .read(true)
             .open(input_path)
             .expect("Failed to open input file");
 
-        let mut reader = BufReader::new(file);
+        let mut output = String::new();
+        file.read_to_string(&mut output)
+            .expect("Schema file contains invalid UTF-8");
 
-        let mut output = Vec::new();
-        lzma_rs::xz_decompress(&mut reader, &mut output).expect("Failed to decompress xz file");
-
-        String::from_utf8(output).expect("Decompressed data is not valid UTF-8")
+        output
     } else {
         std::fs::read_to_string(input_path).expect("Failed to read input file")
     };

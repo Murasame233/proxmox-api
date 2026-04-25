@@ -9,7 +9,6 @@ edition = "2024"
 clap = { version = "4.6.0", features = ["derive", "std", "help", "color", "usage"], default-features = false }
 env_logger = "0.11.10"
 log = "0.4.29"
-lzma-rs = "0.3.0"
 parking_lot = "0.12.5"
 proc-macro2 = "1.0.106"
 quote = "1.0.45"
