@@ -30,7 +30,7 @@ pub trait Client: Clone {
         path: &str,
         body: Option<&B>,
         query: Option<&Q>,
-    ) -> Result<R, Self::Error>
+    ) -> impl Future<Output = Result<R, Self::Error>>
     where
         B: Serialize,
         Q: Serialize,
@@ -41,7 +41,7 @@ pub trait Client: Clone {
         method: Method,
         path: &str,
         body: &B,
-    ) -> Result<R, Self::Error>
+    ) -> impl Future<Output = Result<R, Self::Error>>
     where
         B: Serialize,
         R: DeserializeOwned,
@@ -54,7 +54,7 @@ pub trait Client: Clone {
         method: Method,
         path: &str,
         query: &Q,
-    ) -> Result<R, Self::Error>
+    ) -> impl Future<Output = Result<R, Self::Error>>
     where
         Q: Serialize,
         R: DeserializeOwned,
@@ -62,7 +62,7 @@ pub trait Client: Clone {
         self.request_with_body_and_query::<(), _, _>(method, path, None, Some(query))
     }
 
-    fn put<B, R>(&self, path: &str, body: &B) -> Result<R, Self::Error>
+    fn put<B, R>(&self, path: &str, body: &B) -> impl Future<Output = Result<R, Self::Error>>
     where
         B: Serialize,
         R: DeserializeOwned,
@@ -70,7 +70,7 @@ pub trait Client: Clone {
         self.request_with_body(Method::Put, path, body)
     }
 
-    fn post<B, R>(&self, path: &str, body: &B) -> Result<R, Self::Error>
+    fn post<B, R>(&self, path: &str, body: &B) -> impl Future<Output = Result<R, Self::Error>>
     where
         B: Serialize,
         R: DeserializeOwned,
@@ -78,7 +78,7 @@ pub trait Client: Clone {
         self.request_with_body(Method::Post, path, body)
     }
 
-    fn delete<B, R>(&self, path: &str, query: &B) -> Result<R, Self::Error>
+    fn delete<B, R>(&self, path: &str, query: &B) -> impl Future<Output = Result<R, Self::Error>>
     where
         B: Serialize,
         R: DeserializeOwned,
@@ -86,7 +86,7 @@ pub trait Client: Clone {
         self.request_with_query(Method::Delete, path, query)
     }
 
-    fn get<Q, R>(&self, path: &str, query: &Q) -> Result<R, Self::Error>
+    fn get<Q, R>(&self, path: &str, query: &Q) -> impl Future<Output = Result<R, Self::Error>>
     where
         Q: Serialize,
         R: DeserializeOwned,
@@ -107,7 +107,7 @@ where
         path: &str,
         body: Option<&B>,
         query: Option<&Q>,
-    ) -> Result<R, Self::Error>
+    ) -> impl Future<Output = Result<R, Self::Error>>
     where
         B: Serialize,
         Q: Serialize,

@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use reqwest::{Method, StatusCode, blocking::RequestBuilder};
+use reqwest::{Method, StatusCode, RequestBuilder};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 
 use super::base_access::{AuthState, Ticket, TicketResponse};
@@ -24,7 +24,7 @@ impl From<reqwest::Error> for Error {
 
 #[derive(Debug, Clone)]
 pub struct Client {
-    client: Arc<reqwest::blocking::Client>,
+    client: Arc<reqwest::Client>,
     host: String,
 
     user: String,
@@ -34,9 +34,9 @@ pub struct Client {
 }
 
 impl Client {
-    fn client() -> Arc<reqwest::blocking::Client> {
+    fn client() -> Arc<reqwest::Client> {
         Arc::new(
-            reqwest::blocking::ClientBuilder::new()
+            reqwest::ClientBuilder::new()
                 .danger_accept_invalid_certs(true)
                 .build()
                 .expect("failed to build HTTP client"),
@@ -47,7 +47,7 @@ impl Client {
         host: &str,
         user: &str,
         realm: &str,
-        client: Option<reqwest::blocking::Client>,
+        client: Option<reqwest::Client>,
     ) -> Self {
         Self {
             client: match client {
@@ -68,8 +68,8 @@ impl Client {
         self
     }
 
-    pub fn with_login(self, password: &str) -> Result<Self, Error> {
-        self.login(password)?;
+    pub async fn with_login(self, password: &str) -> Result<Self, Error> {
+        self.login(password).await?;
         Ok(self)
     }
 
@@ -86,13 +86,13 @@ impl Client {
         request
     }
 
-    fn login(&self, password: &str) -> Result<(), Error> {
+    async fn login(&self, password: &str) -> Result<(), Error> {
         let user = self.user.to_string();
         let realm = self.realm.to_string();
         let request = Ticket::new(&user, &realm, password);
 
         let csrf_details: TicketResponse =
-            crate::client::Client::post(self, "/access/ticket", &request)?;
+            crate::client::Client::post(self, "/access/ticket", &request).await?;
 
         let ticket = csrf_details
             .auth_ticket
@@ -110,7 +110,7 @@ impl Client {
     ///
     /// The ticket will automatically refresh if the last auth ticket was obtained more
     /// than an hour ago, or if `force` is set to `true`.
-    pub fn refresh_auth_ticket(&self, force: bool) -> Result<(), Error> {
+    pub async fn refresh_auth_ticket(&self, force: bool) -> Result<(), Error> {
         log::trace!("Checking whether auth ticket should be refreshed (force: {force})");
 
         let auth_ticket = if let Some(ticket) = self.auth_state.auth_ticket() {
@@ -128,7 +128,7 @@ impl Client {
             // TODO: lock auth state during entire login operation to avoid
             // Time Of Check Time Of Use barriers
             log::debug!("Refreshing auth ticket.");
-            self.login(&auth_ticket)?;
+            self.login(&auth_ticket).await?;
         }
 
         Ok(())
@@ -138,7 +138,7 @@ impl Client {
 impl crate::client::Client for Client {
     type Error = Error;
 
-    fn request_with_body_and_query<B, Q, R>(
+    async fn request_with_body_and_query<B, Q, R>(
         &self,
         method: crate::client::Method,
         path: &str,
@@ -175,11 +175,11 @@ impl crate::client::Client for Client {
             request
         };
 
-        let response = self.append_headers(request).send()?;
+        let response = self.append_headers(request).send().await?;
 
         let response_status = response.status();
 
-        let json_data = response.bytes()?;
+        let json_data = response.bytes().await?;
         let json_str = std::str::from_utf8(&json_data).map_err(|_| Error::ResponseWasNotString)?;
 
         log::debug!("JSON response: {json_str}");

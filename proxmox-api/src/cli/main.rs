@@ -24,7 +24,7 @@ pub struct Cli {
 }
 
 impl Cli {
-    pub fn client(&self) -> std::io::Result<impl Client + std::fmt::Debug> {
+    pub async fn client(&self) -> std::io::Result<impl Client + std::fmt::Debug> {
         fn err<T: std::fmt::Display>(t: T) -> std::io::Error {
             std::io::Error::other(format!("{t}"))
         }
@@ -50,31 +50,33 @@ impl Cli {
 
             ReqwestClient::new(&self.host, user, realm, None)
                 .with_login(password)
+                .await
                 .map_err(err_dbg)
         }
     }
 }
 
-fn main() -> std::io::Result<()> {
+#[tokio::main]
+async fn main() -> std::io::Result<()> {
     pretty_env_logger::init();
 
     let cli = Cli::parse();
 
     log::debug!("CLI args: {cli:?}");
 
-    let client = cli.client()?;
+    let client = cli.client().await?;
 
     #[cfg(feature = "nodes")]
-    nodes(&client);
+    nodes(&client).await;
 
     #[cfg(feature = "pools")]
-    pools(&client);
+    pools(&client).await;
 
     Ok(())
 }
 
 #[cfg(feature = "nodes")]
-fn nodes(client: &impl Client) {
+async fn nodes(client: &impl Client) {
     use proxmox_api::{nodes::NodesClient, types::VmId, types::bounded_integer::BoundedInteger};
 
     let nodes_client = NodesClient::new(client);
@@ -87,27 +89,25 @@ fn nodes(client: &impl Client) {
             .vmid(VmId::new(118).unwrap())
             .config()
             .get(Default::default())
+            .await
     );
 }
 
 #[cfg(feature = "pools")]
-fn pools(client: &impl Client) {
+async fn pools(client: &impl Client) {
     use proxmox_api::pools::{GetParams, PoolsClient};
 
     let pools_client = PoolsClient::new(client);
 
-    pools_client
-        .get(Default::default())
-        .unwrap()
-        .into_iter()
-        .for_each(|v| {
-            let pool = pools_client
-                .get(GetParams {
-                    poolid: Some(v.poolid.clone()),
-                    ..Default::default()
-                })
-                .unwrap();
+    for v in pools_client.get(Default::default()).await.unwrap() {
+        let pool = pools_client
+            .get(GetParams {
+                poolid: Some(v.poolid.clone()),
+                ..Default::default()
+            })
+            .await
+            .unwrap();
 
-            println!("Pool info for {}: {:?}", v.poolid, pool[0]);
-        });
+        println!("Pool info for {}: {:?}", v.poolid, pool[0]);
+    }
 }

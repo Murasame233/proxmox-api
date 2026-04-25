@@ -153,11 +153,14 @@ impl Generator {
                     } else {
                         (
                             quote!( -> Result<(), T::Error> ),
-                            quote!(self.client.#fn_name(#defer_signature)),
+                            quote!(self.client.#fn_name(#defer_signature).await),
                         )
                     }
                 } else {
-                    (quote!(), quote!(self.client.#fn_name(#defer_signature)))
+                    (
+                        quote!(),
+                        quote!(self.client.#fn_name(#defer_signature).await),
+                    )
                 };
 
                 let doc = if let Some(doc) = &info.description {
@@ -170,7 +173,7 @@ impl Generator {
 
                 let fn_definition = quote! {
                     #doc
-                    pub fn #fn_name(#signature) #returns {
+                    pub async fn #fn_name(#signature) #returns {
                         let path = self.path.to_string();
                         #call
                     }
@@ -284,26 +287,26 @@ impl Generator {
         match def {
             Some(PrimitiveTypeDef::Integer) => {
                 let int = proxmox_api(quote!(types::Integer));
-                quote!(Ok(self.client.#fn_name::<_, #int>(#defer_signature)?.get()))
+                quote!(Ok(self.client.#fn_name::<_, #int>(#defer_signature).await?.get()))
             }
             Some(PrimitiveTypeDef::Number) => {
                 let num_ty = proxmox_api(quote!(types::Number));
-                quote!(Ok(self.client.#fn_name::<_, #num_ty>(#defer_signature)?.get()))
+                quote!(Ok(self.client.#fn_name::<_, #num_ty>(#defer_signature).await?.get()))
             }
             Some(PrimitiveTypeDef::Boolean) => {
                 let bool_ty = proxmox_api(quote!(types::Bool));
-                quote!(Ok(self.client.#fn_name::<_, #bool_ty>(#defer_signature)?.get()))
+                quote!(Ok(self.client.#fn_name::<_, #bool_ty>(#defer_signature).await?.get()))
             }
             Some(PrimitiveTypeDef::String) | None => {
-                quote!(self.client.#fn_name(#defer_signature))
+                quote!(self.client.#fn_name(#defer_signature).await)
             }
             Some(PrimitiveTypeDef::UnsignedInteger) => {
                 let uint_ty = proxmox_api(quote!(types::UnsignedInteger));
-                quote!(Ok(self.client.#fn_name::<_, #uint_ty>(#defer_signature)?.get()))
+                quote!(Ok(self.client.#fn_name::<_, #uint_ty>(#defer_signature).await?.get()))
             }
             Some(PrimitiveTypeDef::NonZeroUnsignedInteger) => {
                 let nzuint_ty = proxmox_api(quote!(types::NonZeroUnsignedInteger));
-                quote!(Ok(self.client.#fn_name::<_, #nzuint_ty>(#defer_signature)?.get()))
+                quote!(Ok(self.client.#fn_name::<_, #nzuint_ty>(#defer_signature).await?.get()))
             }
         }
     }
