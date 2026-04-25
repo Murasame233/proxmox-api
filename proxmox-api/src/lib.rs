@@ -9,8 +9,8 @@ mod generated;
 #[allow(unused)]
 pub use generated::*;
 
-#[cfg(any(feature = "reqwest-client", feature = "ureq-client"))]
+#[cfg(feature = "reqwest-client")]
 mod clients;
 
-#[cfg(any(feature = "reqwest-client", feature = "ureq-client"))]
+#[cfg(feature = "reqwest-client")]
 pub use clients::*;
