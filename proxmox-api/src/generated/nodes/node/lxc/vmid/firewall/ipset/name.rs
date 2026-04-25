@@ -21,9 +21,9 @@ where
 {
     #[doc = "Delete IPSet"]
     #[doc = ""]
-    pub fn delete(&self, params: DeleteParams) -> Result<(), T::Error> {
+    pub async fn delete(&self, params: DeleteParams) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.delete(&path, &params)
+        self.client.delete(&path, &params).await
     }
 }
 impl<T> NameClient<T>
@@ -32,9 +32,9 @@ where
 {
     #[doc = "List IPSet content"]
     #[doc = ""]
-    pub fn get(&self) -> Result<Vec<GetOutputItems>, T::Error> {
+    pub async fn get(&self) -> Result<Vec<GetOutputItems>, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &())
+        self.client.get(&path, &()).await
     }
 }
 impl<T> NameClient<T>
@@ -43,9 +43,9 @@ where
 {
     #[doc = "Add IP or Network to IPSet."]
     #[doc = ""]
-    pub fn post(&self, params: PostParams) -> Result<(), T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &params)
+        self.client.post(&path, &params).await
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

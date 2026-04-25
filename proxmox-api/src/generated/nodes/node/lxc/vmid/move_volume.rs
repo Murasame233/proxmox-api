@@ -20,9 +20,9 @@ where
 {
     #[doc = "Move a rootfs-/mp-volume to a different storage or to a different container."]
     #[doc = ""]
-    pub fn post(&self, params: PostParams) -> Result<String, T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &params)
+        self.client.post(&path, &params).await
     }
 }
 impl PostParams {

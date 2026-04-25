@@ -20,8 +20,8 @@ where
 {
     #[doc = "Get the Ceph configuration file."]
     #[doc = ""]
-    pub fn get(&self) -> Result<String, T::Error> {
+    pub async fn get(&self) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &())
+        self.client.get(&path, &()).await
     }
 }

@@ -20,9 +20,9 @@ where
 {
     #[doc = "Syncs users and/or groups from the configured LDAP to user.cfg. NOTE: Synced groups will have the name 'name-$realm', so make sure those groups do not exist to prevent overwriting."]
     #[doc = ""]
-    pub fn post(&self, params: PostParams) -> Result<String, T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &params)
+        self.client.post(&path, &params).await
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

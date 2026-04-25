@@ -20,9 +20,9 @@ where
 {
     #[doc = "Prune backups. Only those using the standard naming scheme are considered."]
     #[doc = ""]
-    pub fn delete(&self, params: DeleteParams) -> Result<String, T::Error> {
+    pub async fn delete(&self, params: DeleteParams) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.delete(&path, &params)
+        self.client.delete(&path, &params).await
     }
 }
 impl<T> PrunebackupsClient<T>
@@ -31,9 +31,9 @@ where
 {
     #[doc = "Get prune information for backups. NOTE: this is only a preview and might not be what a subsequent prune call does if backups are removed/added in the meantime."]
     #[doc = ""]
-    pub fn get(&self, params: GetParams) -> Result<Vec<GetOutputItems>, T::Error> {
+    pub async fn get(&self, params: GetParams) -> Result<Vec<GetOutputItems>, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &params)
+        self.client.get(&path, &params).await
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

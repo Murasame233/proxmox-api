@@ -20,9 +20,9 @@ where
 {
     #[doc = "Get Access Control List (ACLs)."]
     #[doc = ""]
-    pub fn get(&self) -> Result<Vec<GetOutputItems>, T::Error> {
+    pub async fn get(&self) -> Result<Vec<GetOutputItems>, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &())
+        self.client.get(&path, &()).await
     }
 }
 impl<T> AclClient<T>
@@ -31,9 +31,9 @@ where
 {
     #[doc = "Update Access Control List (add or remove permissions)."]
     #[doc = ""]
-    pub fn put(&self, params: PutParams) -> Result<(), T::Error> {
+    pub async fn put(&self, params: PutParams) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.put(&path, &params)
+        self.client.put(&path, &params).await
     }
 }
 impl GetOutputItems {

@@ -27,9 +27,9 @@ where
 {
     #[doc = "Index of available scan methods"]
     #[doc = ""]
-    pub fn get(&self) -> Result<Vec<GetOutputItems>, T::Error> {
+    pub async fn get(&self) -> Result<Vec<GetOutputItems>, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &())
+        self.client.get(&path, &()).await
     }
 }
 impl GetOutputItems {

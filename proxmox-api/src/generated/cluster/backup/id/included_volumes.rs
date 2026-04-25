@@ -20,9 +20,9 @@ where
 {
     #[doc = "Returns included guests and the backup status of their disks. Optimized to be used in ExtJS tree views."]
     #[doc = ""]
-    pub fn get(&self) -> Result<GetOutput, T::Error> {
+    pub async fn get(&self) -> Result<GetOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &())
+        self.client.get(&path, &()).await
     }
 }
 impl ChildrenGetOutputChildrenItems {

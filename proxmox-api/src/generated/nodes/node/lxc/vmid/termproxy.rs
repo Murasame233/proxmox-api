@@ -20,8 +20,8 @@ where
 {
     #[doc = "Creates a TCP proxy connection."]
     #[doc = ""]
-    pub fn post(&self) -> Result<(), T::Error> {
+    pub async fn post(&self) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &())
+        self.client.post(&path, &()).await
     }
 }

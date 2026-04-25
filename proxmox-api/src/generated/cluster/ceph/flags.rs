@@ -21,9 +21,9 @@ where
 {
     #[doc = "get the status of all ceph flags"]
     #[doc = ""]
-    pub fn get(&self) -> Result<Vec<GetOutputItems>, T::Error> {
+    pub async fn get(&self) -> Result<Vec<GetOutputItems>, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &())
+        self.client.get(&path, &()).await
     }
 }
 impl<T> FlagsClient<T>
@@ -32,9 +32,9 @@ where
 {
     #[doc = "Set/Unset multiple ceph flags at once."]
     #[doc = ""]
-    pub fn put(&self, params: PutParams) -> Result<String, T::Error> {
+    pub async fn put(&self, params: PutParams) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.put(&path, &params)
+        self.client.put(&path, &params).await
     }
 }
 impl GetOutputItems {

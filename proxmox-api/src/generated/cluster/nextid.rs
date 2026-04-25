@@ -20,11 +20,12 @@ where
 {
     #[doc = "Get next free VMID. Pass a VMID to assert that its free (at time of check)."]
     #[doc = ""]
-    pub fn get(&self, params: GetParams) -> Result<i64, T::Error> {
+    pub async fn get(&self, params: GetParams) -> Result<i64, T::Error> {
         let path = self.path.to_string();
         Ok(self
             .client
-            .get::<_, crate::types::Integer>(&path, &params)?
+            .get::<_, crate::types::Integer>(&path, &params)
+            .await?
             .get())
     }
 }

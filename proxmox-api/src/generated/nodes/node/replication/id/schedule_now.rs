@@ -20,8 +20,8 @@ where
 {
     #[doc = "Schedule replication job to start as soon as possible."]
     #[doc = ""]
-    pub fn post(&self) -> Result<String, T::Error> {
+    pub async fn post(&self) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &())
+        self.client.post(&path, &()).await
     }
 }

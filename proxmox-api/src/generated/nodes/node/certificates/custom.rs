@@ -20,9 +20,9 @@ where
 {
     #[doc = "DELETE custom certificate chain and key."]
     #[doc = ""]
-    pub fn delete(&self, params: DeleteParams) -> Result<(), T::Error> {
+    pub async fn delete(&self, params: DeleteParams) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.delete(&path, &params)
+        self.client.delete(&path, &params).await
     }
 }
 impl<T> CustomClient<T>
@@ -31,9 +31,9 @@ where
 {
     #[doc = "Upload or update custom certificate chain and key."]
     #[doc = ""]
-    pub fn post(&self, params: PostParams) -> Result<PostOutput, T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<PostOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &params)
+        self.client.post(&path, &params).await
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

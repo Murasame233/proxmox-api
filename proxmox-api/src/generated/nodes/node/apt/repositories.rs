@@ -20,9 +20,9 @@ where
 {
     #[doc = "Get APT repository information."]
     #[doc = ""]
-    pub fn get(&self) -> Result<GetOutput, T::Error> {
+    pub async fn get(&self) -> Result<GetOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &())
+        self.client.get(&path, &()).await
     }
 }
 impl<T> RepositoriesClient<T>
@@ -31,9 +31,9 @@ where
 {
     #[doc = "Change the properties of a repository. Currently only allows enabling/disabling."]
     #[doc = ""]
-    pub fn post(&self, params: PostParams) -> Result<(), T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &params)
+        self.client.post(&path, &params).await
     }
 }
 impl<T> RepositoriesClient<T>
@@ -42,9 +42,9 @@ where
 {
     #[doc = "Add a standard repository to the configuration"]
     #[doc = ""]
-    pub fn put(&self, params: PutParams) -> Result<(), T::Error> {
+    pub async fn put(&self, params: PutParams) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.put(&path, &params)
+        self.client.put(&path, &params).await
     }
 }
 impl ErrorsGetOutputErrorsItems {

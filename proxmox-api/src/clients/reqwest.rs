@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use reqwest::{Method, StatusCode, RequestBuilder};
+use reqwest::{Method, RequestBuilder, StatusCode};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 
 use super::base_access::{AuthState, Ticket, TicketResponse};
@@ -43,12 +43,7 @@ impl Client {
         )
     }
 
-    pub fn new(
-        host: &str,
-        user: &str,
-        realm: &str,
-        client: Option<reqwest::Client>,
-    ) -> Self {
+    pub fn new(host: &str, user: &str, realm: &str, client: Option<reqwest::Client>) -> Self {
         Self {
             client: match client {
                 None => Self::client(),

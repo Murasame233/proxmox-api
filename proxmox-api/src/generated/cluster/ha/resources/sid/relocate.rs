@@ -20,9 +20,9 @@ where
 {
     #[doc = "Request resource relocatzion to another node. This stops the service on the old node, and restarts it on the target node."]
     #[doc = ""]
-    pub fn post(&self, params: PostParams) -> Result<PostOutput, T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<PostOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &params)
+        self.client.post(&path, &params).await
     }
 }
 impl BlockingResourcesPostOutputBlockingResourcesItems {

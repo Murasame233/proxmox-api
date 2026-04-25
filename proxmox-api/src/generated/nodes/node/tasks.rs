@@ -21,9 +21,9 @@ where
 {
     #[doc = "Read task list for one node (finished tasks)."]
     #[doc = ""]
-    pub fn get(&self, params: GetParams) -> Result<Vec<GetOutputItems>, T::Error> {
+    pub async fn get(&self, params: GetParams) -> Result<Vec<GetOutputItems>, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &params)
+        self.client.get(&path, &params).await
     }
 }
 impl GetOutputItems {

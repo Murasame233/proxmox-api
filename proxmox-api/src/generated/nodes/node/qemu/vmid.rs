@@ -46,9 +46,9 @@ where
 {
     #[doc = "Destroy the VM and  all used/owned volumes. Removes any VM specific permissions and firewall rules"]
     #[doc = ""]
-    pub fn delete(&self, params: DeleteParams) -> Result<String, T::Error> {
+    pub async fn delete(&self, params: DeleteParams) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.delete(&path, &params)
+        self.client.delete(&path, &params).await
     }
 }
 impl<T> VmidClient<T>
@@ -57,9 +57,9 @@ where
 {
     #[doc = "Directory index"]
     #[doc = ""]
-    pub fn get(&self) -> Result<Vec<GetOutputItems>, T::Error> {
+    pub async fn get(&self) -> Result<Vec<GetOutputItems>, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &())
+        self.client.get(&path, &()).await
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

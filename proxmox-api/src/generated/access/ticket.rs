@@ -20,9 +20,9 @@ where
 {
     #[doc = "Dummy. Useful for formatters which want to provide a login page."]
     #[doc = ""]
-    pub fn get(&self) -> Result<(), T::Error> {
+    pub async fn get(&self) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &())
+        self.client.get(&path, &()).await
     }
 }
 impl<T> TicketClient<T>
@@ -31,9 +31,9 @@ where
 {
     #[doc = "Create or verify authentication ticket."]
     #[doc = ""]
-    pub fn post(&self, params: PostParams) -> Result<PostOutput, T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<PostOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &params)
+        self.client.post(&path, &params).await
     }
 }
 impl PostOutput {

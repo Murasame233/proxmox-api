@@ -20,9 +20,9 @@ where
 {
     #[doc = "Delete rule."]
     #[doc = ""]
-    pub fn delete(&self, params: DeleteParams) -> Result<(), T::Error> {
+    pub async fn delete(&self, params: DeleteParams) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.delete(&path, &params)
+        self.client.delete(&path, &params).await
     }
 }
 impl<T> PosClient<T>
@@ -31,9 +31,9 @@ where
 {
     #[doc = "Get single rule data."]
     #[doc = ""]
-    pub fn get(&self) -> Result<GetOutput, T::Error> {
+    pub async fn get(&self) -> Result<GetOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &())
+        self.client.get(&path, &()).await
     }
 }
 impl<T> PosClient<T>
@@ -42,9 +42,9 @@ where
 {
     #[doc = "Modify rule data."]
     #[doc = ""]
-    pub fn put(&self, params: PutParams) -> Result<(), T::Error> {
+    pub async fn put(&self, params: PutParams) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.put(&path, &params)
+        self.client.put(&path, &params).await
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

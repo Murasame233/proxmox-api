@@ -20,9 +20,9 @@ where
 {
     #[doc = "Get vnet firewall options."]
     #[doc = ""]
-    pub fn get(&self) -> Result<GetOutput, T::Error> {
+    pub async fn get(&self) -> Result<GetOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &())
+        self.client.get(&path, &()).await
     }
 }
 impl<T> OptionsClient<T>
@@ -31,9 +31,9 @@ where
 {
     #[doc = "Set Firewall options."]
     #[doc = ""]
-    pub fn put(&self, params: PutParams) -> Result<(), T::Error> {
+    pub async fn put(&self, params: PutParams) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.put(&path, &params)
+        self.client.put(&path, &params).await
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

@@ -25,9 +25,9 @@ where
 {
     #[doc = "Destroy OSD"]
     #[doc = ""]
-    pub fn delete(&self, params: DeleteParams) -> Result<String, T::Error> {
+    pub async fn delete(&self, params: DeleteParams) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.delete(&path, &params)
+        self.client.delete(&path, &params).await
     }
 }
 impl<T> OsdidClient<T>
@@ -36,9 +36,9 @@ where
 {
     #[doc = "OSD index."]
     #[doc = ""]
-    pub fn get(&self) -> Result<Vec<GetOutputItems>, T::Error> {
+    pub async fn get(&self) -> Result<Vec<GetOutputItems>, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &())
+        self.client.get(&path, &()).await
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

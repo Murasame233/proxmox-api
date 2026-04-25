@@ -20,9 +20,9 @@ where
 {
     #[doc = "Add a node"]
     #[doc = ""]
-    pub fn delete(&self) -> Result<(), T::Error> {
+    pub async fn delete(&self) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.delete(&path, &())
+        self.client.delete(&path, &()).await
     }
 }
 impl<T> NodeIdClient<T>
@@ -31,9 +31,9 @@ where
 {
     #[doc = "Get a node"]
     #[doc = ""]
-    pub fn get(&self) -> Result<(), T::Error> {
+    pub async fn get(&self) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &())
+        self.client.get(&path, &()).await
     }
 }
 impl<T> NodeIdClient<T>
@@ -42,9 +42,9 @@ where
 {
     #[doc = "Update a node"]
     #[doc = ""]
-    pub fn put(&self, params: PutParams) -> Result<(), T::Error> {
+    pub async fn put(&self, params: PutParams) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.put(&path, &params)
+        self.client.put(&path, &params).await
     }
 }
 impl PutParams {

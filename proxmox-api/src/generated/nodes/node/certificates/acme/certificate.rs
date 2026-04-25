@@ -20,9 +20,9 @@ where
 {
     #[doc = "Revoke existing certificate from CA."]
     #[doc = ""]
-    pub fn delete(&self) -> Result<String, T::Error> {
+    pub async fn delete(&self) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.delete(&path, &())
+        self.client.delete(&path, &()).await
     }
 }
 impl<T> CertificateClient<T>
@@ -31,9 +31,9 @@ where
 {
     #[doc = "Order a new certificate from ACME-compatible CA."]
     #[doc = ""]
-    pub fn post(&self, params: PostParams) -> Result<String, T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &params)
+        self.client.post(&path, &params).await
     }
 }
 impl<T> CertificateClient<T>
@@ -42,9 +42,9 @@ where
 {
     #[doc = "Renew existing certificate from CA."]
     #[doc = ""]
-    pub fn put(&self, params: PutParams) -> Result<String, T::Error> {
+    pub async fn put(&self, params: PutParams) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.put(&path, &params)
+        self.client.put(&path, &params).await
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

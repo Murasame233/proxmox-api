@@ -20,9 +20,9 @@ where
 {
     #[doc = "Sets the password for the given user to the given password"]
     #[doc = ""]
-    pub fn post(&self, params: PostParams) -> Result<PostOutput, T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<PostOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &params)
+        self.client.post(&path, &params).await
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

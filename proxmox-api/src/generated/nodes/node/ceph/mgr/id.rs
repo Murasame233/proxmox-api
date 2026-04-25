@@ -20,9 +20,9 @@ where
 {
     #[doc = "Destroy Ceph Manager."]
     #[doc = ""]
-    pub fn delete(&self) -> Result<String, T::Error> {
+    pub async fn delete(&self) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.delete(&path, &())
+        self.client.delete(&path, &()).await
     }
 }
 impl<T> IdClient<T>
@@ -31,8 +31,8 @@ where
 {
     #[doc = "Create Ceph Manager"]
     #[doc = ""]
-    pub fn post(&self) -> Result<String, T::Error> {
+    pub async fn post(&self) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &())
+        self.client.post(&path, &()).await
     }
 }

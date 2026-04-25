@@ -20,9 +20,9 @@ where
 {
     #[doc = "Get information needed to join this cluster over the connected node."]
     #[doc = ""]
-    pub fn get(&self, params: GetParams) -> Result<GetOutput, T::Error> {
+    pub async fn get(&self, params: GetParams) -> Result<GetOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &params)
+        self.client.get(&path, &params).await
     }
 }
 impl<T> JoinClient<T>
@@ -31,9 +31,9 @@ where
 {
     #[doc = "Joins this node into an existing cluster. If no links are given, default to IP resolved by node's hostname on single link (fallback fails for clusters with multiple links)."]
     #[doc = ""]
-    pub fn post(&self, params: PostParams) -> Result<String, T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &params)
+        self.client.post(&path, &params).await
     }
 }
 impl GetOutput {

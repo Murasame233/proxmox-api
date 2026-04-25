@@ -20,9 +20,9 @@ where
 {
     #[doc = "Wipe a disk or partition."]
     #[doc = ""]
-    pub fn put(&self, params: PutParams) -> Result<String, T::Error> {
+    pub async fn put(&self, params: PutParams) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.put(&path, &params)
+        self.client.put(&path, &params).await
     }
 }
 impl PutParams {

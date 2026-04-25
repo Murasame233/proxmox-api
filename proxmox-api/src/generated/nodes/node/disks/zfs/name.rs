@@ -20,9 +20,9 @@ where
 {
     #[doc = "Destroy a ZFS pool."]
     #[doc = ""]
-    pub fn delete(&self, params: DeleteParams) -> Result<String, T::Error> {
+    pub async fn delete(&self, params: DeleteParams) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.delete(&path, &params)
+        self.client.delete(&path, &params).await
     }
 }
 impl<T> NameClient<T>
@@ -31,9 +31,9 @@ where
 {
     #[doc = "Get details about a zpool."]
     #[doc = ""]
-    pub fn get(&self) -> Result<GetOutput, T::Error> {
+    pub async fn get(&self) -> Result<GetOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &())
+        self.client.get(&path, &()).await
     }
 }
 impl ChildrenGetOutputChildrenItems {

@@ -20,9 +20,9 @@ where
 {
     #[doc = "Get the virtual machine configuration with pending configuration changes applied. Set the 'current' parameter to get the current configuration instead."]
     #[doc = ""]
-    pub fn get(&self, params: GetParams) -> Result<GetOutput, T::Error> {
+    pub async fn get(&self, params: GetParams) -> Result<GetOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &params)
+        self.client.get(&path, &params).await
     }
 }
 impl<T> ConfigClient<T>
@@ -31,9 +31,9 @@ where
 {
     #[doc = "Set virtual machine options (asynchronous API)."]
     #[doc = ""]
-    pub fn post(&self, params: PostParams) -> Result<Option<String>, T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<Option<String>, T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &params)
+        self.client.post(&path, &params).await
     }
 }
 impl<T> ConfigClient<T>
@@ -42,9 +42,9 @@ where
 {
     #[doc = "Set virtual machine options (synchronous API) - You should consider using the POST method instead for any actions involving hotplug or storage allocation."]
     #[doc = ""]
-    pub fn put(&self, params: PutParams) -> Result<(), T::Error> {
+    pub async fn put(&self, params: PutParams) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.put(&path, &params)
+        self.client.put(&path, &params).await
     }
 }
 impl GetOutput {

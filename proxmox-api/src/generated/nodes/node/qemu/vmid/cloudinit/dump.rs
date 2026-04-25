@@ -20,9 +20,9 @@ where
 {
     #[doc = "Get automatically generated cloudinit config."]
     #[doc = ""]
-    pub fn get(&self, params: GetParams) -> Result<String, T::Error> {
+    pub async fn get(&self, params: GetParams) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &params)
+        self.client.get(&path, &params).await
     }
 }
 impl GetParams {

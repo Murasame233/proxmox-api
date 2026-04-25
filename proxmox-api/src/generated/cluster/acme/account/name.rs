@@ -20,9 +20,9 @@ where
 {
     #[doc = "Deactivate existing ACME account at CA."]
     #[doc = ""]
-    pub fn delete(&self) -> Result<String, T::Error> {
+    pub async fn delete(&self) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.delete(&path, &())
+        self.client.delete(&path, &()).await
     }
 }
 impl<T> NameClient<T>
@@ -31,9 +31,9 @@ where
 {
     #[doc = "Return existing ACME account information."]
     #[doc = ""]
-    pub fn get(&self) -> Result<GetOutput, T::Error> {
+    pub async fn get(&self) -> Result<GetOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &())
+        self.client.get(&path, &()).await
     }
 }
 impl<T> NameClient<T>
@@ -42,9 +42,9 @@ where
 {
     #[doc = "Update existing ACME account information with CA. Note: not specifying any new account information triggers a refresh."]
     #[doc = ""]
-    pub fn put(&self, params: PutParams) -> Result<String, T::Error> {
+    pub async fn put(&self, params: PutParams) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.put(&path, &params)
+        self.client.put(&path, &params).await
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

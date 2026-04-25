@@ -20,9 +20,9 @@ where
 {
     #[doc = "Query metadata of an URL: file size, file name and mime type."]
     #[doc = ""]
-    pub fn get(&self, params: GetParams) -> Result<GetOutput, T::Error> {
+    pub async fn get(&self, params: GetParams) -> Result<GetOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &params)
+        self.client.get(&path, &params).await
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

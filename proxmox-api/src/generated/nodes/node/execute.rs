@@ -20,9 +20,9 @@ where
 {
     #[doc = "Execute multiple commands in order, root only."]
     #[doc = ""]
-    pub fn post(&self, params: PostParams) -> Result<Vec<PostOutputItems>, T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<Vec<PostOutputItems>, T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &params)
+        self.client.post(&path, &params).await
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

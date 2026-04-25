@@ -20,9 +20,9 @@ where
 {
     #[doc = "Get container configuration."]
     #[doc = ""]
-    pub fn get(&self, params: GetParams) -> Result<GetOutput, T::Error> {
+    pub async fn get(&self, params: GetParams) -> Result<GetOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &params)
+        self.client.get(&path, &params).await
     }
 }
 impl<T> ConfigClient<T>
@@ -31,9 +31,9 @@ where
 {
     #[doc = "Set container options."]
     #[doc = ""]
-    pub fn put(&self, params: PutParams) -> Result<(), T::Error> {
+    pub async fn put(&self, params: PutParams) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.put(&path, &params)
+        self.client.put(&path, &params).await
     }
 }
 impl GetOutput {

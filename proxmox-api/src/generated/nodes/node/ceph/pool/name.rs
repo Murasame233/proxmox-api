@@ -21,9 +21,9 @@ where
 {
     #[doc = "Destroy pool"]
     #[doc = ""]
-    pub fn delete(&self, params: DeleteParams) -> Result<String, T::Error> {
+    pub async fn delete(&self, params: DeleteParams) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.delete(&path, &params)
+        self.client.delete(&path, &params).await
     }
 }
 impl<T> NameClient<T>
@@ -32,9 +32,9 @@ where
 {
     #[doc = "Pool index."]
     #[doc = ""]
-    pub fn get(&self) -> Result<Vec<GetOutputItems>, T::Error> {
+    pub async fn get(&self) -> Result<Vec<GetOutputItems>, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &())
+        self.client.get(&path, &()).await
     }
 }
 impl<T> NameClient<T>
@@ -43,9 +43,9 @@ where
 {
     #[doc = "Change POOL settings"]
     #[doc = ""]
-    pub fn put(&self, params: PutParams) -> Result<String, T::Error> {
+    pub async fn put(&self, params: PutParams) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.put(&path, &params)
+        self.client.put(&path, &params).await
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

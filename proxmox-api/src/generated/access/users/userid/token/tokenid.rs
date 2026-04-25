@@ -20,9 +20,9 @@ where
 {
     #[doc = "Remove API token for a specific user."]
     #[doc = ""]
-    pub fn delete(&self) -> Result<(), T::Error> {
+    pub async fn delete(&self) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.delete(&path, &())
+        self.client.delete(&path, &()).await
     }
 }
 impl<T> TokenidClient<T>
@@ -31,9 +31,9 @@ where
 {
     #[doc = "Get specific API token information."]
     #[doc = ""]
-    pub fn get(&self) -> Result<GetOutput, T::Error> {
+    pub async fn get(&self) -> Result<GetOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &())
+        self.client.get(&path, &()).await
     }
 }
 impl<T> TokenidClient<T>
@@ -42,9 +42,9 @@ where
 {
     #[doc = "Generate a new API token for a specific user. NOTE: returns API token value, which needs to be stored as it cannot be retrieved afterwards!"]
     #[doc = ""]
-    pub fn post(&self, params: PostParams) -> Result<PostOutput, T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<PostOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &params)
+        self.client.post(&path, &params).await
     }
 }
 impl<T> TokenidClient<T>
@@ -53,9 +53,9 @@ where
 {
     #[doc = "Update API token for a specific user."]
     #[doc = ""]
-    pub fn put(&self, params: PutParams) -> Result<PutOutput, T::Error> {
+    pub async fn put(&self, params: PutParams) -> Result<PutOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.put(&path, &params)
+        self.client.put(&path, &params).await
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

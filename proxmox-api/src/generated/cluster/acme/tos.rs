@@ -20,9 +20,9 @@ where
 {
     #[doc = "Retrieve ACME TermsOfService URL from CA. Deprecated, please use /cluster/acme/meta."]
     #[doc = ""]
-    pub fn get(&self, params: GetParams) -> Result<Option<String>, T::Error> {
+    pub async fn get(&self, params: GetParams) -> Result<Option<String>, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &params)
+        self.client.get(&path, &params).await
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

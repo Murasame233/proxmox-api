@@ -20,9 +20,9 @@ where
 {
     #[doc = "Destroy Ceph Metadata Server"]
     #[doc = ""]
-    pub fn delete(&self) -> Result<String, T::Error> {
+    pub async fn delete(&self) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.delete(&path, &())
+        self.client.delete(&path, &()).await
     }
 }
 impl<T> NameClient<T>
@@ -31,9 +31,9 @@ where
 {
     #[doc = "Create Ceph Metadata Server (MDS)"]
     #[doc = ""]
-    pub fn post(&self, params: PostParams) -> Result<String, T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &params)
+        self.client.post(&path, &params).await
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

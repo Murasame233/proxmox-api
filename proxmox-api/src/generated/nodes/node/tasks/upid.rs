@@ -22,18 +22,18 @@ where
 {
     #[doc = "Stop a task."]
     #[doc = ""]
-    pub fn delete(&self) -> Result<(), T::Error> {
+    pub async fn delete(&self) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.delete(&path, &())
+        self.client.delete(&path, &()).await
     }
 }
 impl<T> UpidClient<T>
 where
     T: crate::client::Client,
 {
-    pub fn get(&self) -> Result<Vec<GetOutputItems>, T::Error> {
+    pub async fn get(&self) -> Result<Vec<GetOutputItems>, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &())
+        self.client.get(&path, &()).await
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

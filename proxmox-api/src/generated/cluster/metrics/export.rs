@@ -20,9 +20,9 @@ where
 {
     #[doc = "Retrieve metrics of the cluster."]
     #[doc = ""]
-    pub fn get(&self, params: GetParams) -> Result<GetOutput, T::Error> {
+    pub async fn get(&self, params: GetParams) -> Result<GetOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &params)
+        self.client.get(&path, &params).await
     }
 }
 impl DataGetOutputDataItems {

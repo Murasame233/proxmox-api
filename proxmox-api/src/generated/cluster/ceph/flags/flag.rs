@@ -20,9 +20,13 @@ where
 {
     #[doc = "Get the status of a specific ceph flag."]
     #[doc = ""]
-    pub fn get(&self) -> Result<bool, T::Error> {
+    pub async fn get(&self) -> Result<bool, T::Error> {
         let path = self.path.to_string();
-        Ok(self.client.get::<_, crate::types::Bool>(&path, &())?.get())
+        Ok(self
+            .client
+            .get::<_, crate::types::Bool>(&path, &())
+            .await?
+            .get())
     }
 }
 impl<T> FlagClient<T>
@@ -31,9 +35,9 @@ where
 {
     #[doc = "Set or clear (unset) a specific ceph flag"]
     #[doc = ""]
-    pub fn put(&self, params: PutParams) -> Result<(), T::Error> {
+    pub async fn put(&self, params: PutParams) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.put(&path, &params)
+        self.client.put(&path, &params).await
     }
 }
 impl PutParams {

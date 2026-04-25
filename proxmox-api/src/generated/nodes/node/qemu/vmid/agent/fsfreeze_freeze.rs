@@ -20,9 +20,9 @@ where
 {
     #[doc = "Execute fsfreeze-freeze."]
     #[doc = ""]
-    pub fn post(&self) -> Result<PostOutput, T::Error> {
+    pub async fn post(&self) -> Result<PostOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &())
+        self.client.post(&path, &()).await
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

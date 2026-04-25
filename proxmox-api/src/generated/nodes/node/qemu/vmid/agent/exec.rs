@@ -20,9 +20,9 @@ where
 {
     #[doc = "Executes the given command in the vm via the guest-agent and returns an object with the pid."]
     #[doc = ""]
-    pub fn post(&self, params: PostParams) -> Result<PostOutput, T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<PostOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &params)
+        self.client.post(&path, &params).await
     }
 }
 impl PostOutput {

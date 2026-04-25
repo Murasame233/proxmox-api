@@ -20,9 +20,9 @@ where
 {
     #[doc = "Migrate the container to another cluster. Creates a new migration task. EXPERIMENTAL feature!"]
     #[doc = ""]
-    pub fn post(&self, params: PostParams) -> Result<String, T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &params)
+        self.client.post(&path, &params).await
     }
 }
 impl PostParams {

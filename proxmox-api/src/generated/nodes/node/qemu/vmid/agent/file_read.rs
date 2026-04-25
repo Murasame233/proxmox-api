@@ -20,9 +20,9 @@ where
 {
     #[doc = "Reads the given file via guest agent. Is limited to 16777216 bytes."]
     #[doc = ""]
-    pub fn get(&self, params: GetParams) -> Result<GetOutput, T::Error> {
+    pub async fn get(&self, params: GetParams) -> Result<GetOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &params)
+        self.client.get(&path, &params).await
     }
 }
 impl GetOutput {

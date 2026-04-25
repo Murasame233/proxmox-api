@@ -21,9 +21,9 @@ where
 {
     #[doc = "Returns a list of all sendmail endpoints"]
     #[doc = ""]
-    pub fn get(&self) -> Result<Vec<GetOutputItems>, T::Error> {
+    pub async fn get(&self) -> Result<Vec<GetOutputItems>, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &())
+        self.client.get(&path, &()).await
     }
 }
 impl<T> SendmailClient<T>
@@ -32,9 +32,9 @@ where
 {
     #[doc = "Create a new sendmail endpoint"]
     #[doc = ""]
-    pub fn post(&self, params: PostParams) -> Result<(), T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &params)
+        self.client.post(&path, &params).await
     }
 }
 impl GetOutputItems {

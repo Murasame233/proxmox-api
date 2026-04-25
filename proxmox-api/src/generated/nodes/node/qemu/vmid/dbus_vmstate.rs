@@ -20,9 +20,9 @@ where
 {
     #[doc = "Control the dbus-vmstate helper for a given running VM."]
     #[doc = ""]
-    pub fn post(&self, params: PostParams) -> Result<(), T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &params)
+        self.client.post(&path, &params).await
     }
 }
 impl PostParams {

@@ -20,9 +20,9 @@ where
 {
     #[doc = "Delete pool (deprecated, no support for nested pools, use 'DELETE /pools/?poolid={poolid}')."]
     #[doc = ""]
-    pub fn delete(&self) -> Result<(), T::Error> {
+    pub async fn delete(&self) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.delete(&path, &())
+        self.client.delete(&path, &()).await
     }
 }
 impl<T> PoolidClient<T>
@@ -31,9 +31,9 @@ where
 {
     #[doc = "Get pool configuration (deprecated, no support for nested pools, use 'GET /pools/?poolid={poolid}')."]
     #[doc = ""]
-    pub fn get(&self, params: GetParams) -> Result<GetOutput, T::Error> {
+    pub async fn get(&self, params: GetParams) -> Result<GetOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &params)
+        self.client.get(&path, &params).await
     }
 }
 impl<T> PoolidClient<T>
@@ -42,9 +42,9 @@ where
 {
     #[doc = "Update pool data (deprecated, no support for nested pools - use 'PUT /pools/?poolid={poolid}' instead)."]
     #[doc = ""]
-    pub fn put(&self, params: PutParams) -> Result<(), T::Error> {
+    pub async fn put(&self, params: PutParams) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.put(&path, &params)
+        self.client.put(&path, &params).await
     }
 }
 impl GetOutput {

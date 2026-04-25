@@ -21,9 +21,9 @@ where
 {
     #[doc = "SDN dns index."]
     #[doc = ""]
-    pub fn get(&self, params: GetParams) -> Result<Vec<GetOutputItems>, T::Error> {
+    pub async fn get(&self, params: GetParams) -> Result<Vec<GetOutputItems>, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &params)
+        self.client.get(&path, &params).await
     }
 }
 impl<T> DnsClient<T>
@@ -32,9 +32,9 @@ where
 {
     #[doc = "Create a new sdn dns object."]
     #[doc = ""]
-    pub fn post(&self, params: PostParams) -> Result<(), T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &params)
+        self.client.post(&path, &params).await
     }
 }
 impl GetOutputItems {

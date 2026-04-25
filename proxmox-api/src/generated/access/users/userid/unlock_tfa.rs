@@ -20,8 +20,12 @@ where
 {
     #[doc = "Unlock a user's TFA authentication."]
     #[doc = ""]
-    pub fn put(&self) -> Result<bool, T::Error> {
+    pub async fn put(&self) -> Result<bool, T::Error> {
         let path = self.path.to_string();
-        Ok(self.client.put::<_, crate::types::Bool>(&path, &())?.get())
+        Ok(self
+            .client
+            .put::<_, crate::types::Bool>(&path, &())
+            .await?
+            .get())
     }
 }

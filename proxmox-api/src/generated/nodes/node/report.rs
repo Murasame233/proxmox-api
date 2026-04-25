@@ -20,8 +20,8 @@ where
 {
     #[doc = "Gather various systems information about a node"]
     #[doc = ""]
-    pub fn get(&self) -> Result<String, T::Error> {
+    pub async fn get(&self) -> Result<String, T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &())
+        self.client.get(&path, &()).await
     }
 }

@@ -20,9 +20,9 @@ where
 {
     #[doc = "Removes a node from the cluster configuration."]
     #[doc = ""]
-    pub fn delete(&self) -> Result<(), T::Error> {
+    pub async fn delete(&self) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.delete(&path, &())
+        self.client.delete(&path, &()).await
     }
 }
 impl<T> NodeClient<T>
@@ -31,9 +31,9 @@ where
 {
     #[doc = "Adds a node to the cluster configuration. This call is for internal use."]
     #[doc = ""]
-    pub fn post(&self, params: PostParams) -> Result<PostOutput, T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<PostOutput, T::Error> {
         let path = self.path.to_string();
-        self.client.post(&path, &params)
+        self.client.post(&path, &params).await
     }
 }
 impl PostOutput {

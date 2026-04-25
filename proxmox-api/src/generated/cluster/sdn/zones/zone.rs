@@ -20,9 +20,9 @@ where
 {
     #[doc = "Delete sdn zone object configuration."]
     #[doc = ""]
-    pub fn delete(&self, params: DeleteParams) -> Result<(), T::Error> {
+    pub async fn delete(&self, params: DeleteParams) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.delete(&path, &params)
+        self.client.delete(&path, &params).await
     }
 }
 impl<T> ZoneClient<T>
@@ -31,9 +31,9 @@ where
 {
     #[doc = "Read sdn zone configuration."]
     #[doc = ""]
-    pub fn get(&self, params: GetParams) -> Result<(), T::Error> {
+    pub async fn get(&self, params: GetParams) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &params)
+        self.client.get(&path, &params).await
     }
 }
 impl<T> ZoneClient<T>
@@ -42,9 +42,9 @@ where
 {
     #[doc = "Update sdn zone object configuration."]
     #[doc = ""]
-    pub fn put(&self, params: PutParams) -> Result<(), T::Error> {
+    pub async fn put(&self, params: PutParams) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.put(&path, &params)
+        self.client.put(&path, &params).await
     }
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]

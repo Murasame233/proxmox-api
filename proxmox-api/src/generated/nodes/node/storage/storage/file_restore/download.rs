@@ -20,9 +20,9 @@ where
 {
     #[doc = "Extract a file or directory (as zip archive) from a PBS backup."]
     #[doc = ""]
-    pub fn get(&self, params: GetParams) -> Result<(), T::Error> {
+    pub async fn get(&self, params: GetParams) -> Result<(), T::Error> {
         let path = self.path.to_string();
-        self.client.get(&path, &params)
+        self.client.get(&path, &params).await
     }
 }
 impl GetParams {
