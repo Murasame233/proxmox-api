@@ -108,9 +108,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Validate the formatting
-        run: cargo fmt --manifest-path ${{ matrix.definition.manifest }} --check
-
       - name: Clippy the ${{ matrix.definition.name }}
         run: cargo clippy --manifest-path ${{ matrix.definition.manifest }} ${{ matrix.definition.args }} -- -Dwarnings
 
@@ -120,3 +117,6 @@ jobs:
       # TODO: reenable this for merges to main?
       - name: Build the ${{ matrix.definition.name }}
         run: cargo build --locked --manifest-path ${{ matrix.definition.manifest }} ${{ matrix.definition.args }}
+
+      - name: Validate the formatting
+        run: cargo fmt --manifest-path ${{ matrix.definition.manifest }} --check
