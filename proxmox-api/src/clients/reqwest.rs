@@ -68,6 +68,12 @@ impl Client {
         Ok(self)
     }
 
+    pub async fn with_ticket(self, ticket: &str, csrf: &str) -> Result<Self, Error> {
+        self.auth_state.set_csrf(ticket.into(), csrf.into());
+        self.refresh_auth_ticket(true).await?;
+        Ok(self)
+    }
+
     fn route(&self, path: &str) -> String {
         format!("{}/api2/json{}", self.host, path)
     }
