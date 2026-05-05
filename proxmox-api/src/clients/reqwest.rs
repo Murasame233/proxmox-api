@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use reqwest::{Method, RequestBuilder, StatusCode};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 
@@ -24,7 +22,7 @@ impl From<reqwest::Error> for Error {
 
 #[derive(Debug, Clone)]
 pub struct Client {
-    client: Arc<reqwest::Client>,
+    client: reqwest::Client,
     host: String,
 
     user: String,
@@ -34,21 +32,16 @@ pub struct Client {
 }
 
 impl Client {
-    fn client() -> Arc<reqwest::Client> {
-        Arc::new(
-            reqwest::ClientBuilder::new()
-                .danger_accept_invalid_certs(true)
-                .build()
-                .expect("failed to build HTTP client"),
-        )
+    fn client() -> reqwest::Client {
+        reqwest::ClientBuilder::new()
+            .danger_accept_invalid_certs(true)
+            .build()
+            .expect("failed to build HTTP client")
     }
 
     pub fn new(host: &str, user: &str, realm: &str, client: Option<reqwest::Client>) -> Self {
         Self {
-            client: match client {
-                None => Self::client(),
-                Some(client) => Arc::new(client),
-            },
+            client: client.unwrap_or_else(Self::client),
             host: host.to_string(),
             user: user.into(),
             realm: realm.into(),
