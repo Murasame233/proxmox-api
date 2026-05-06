@@ -34,7 +34,7 @@ where
 {
     #[doc = "Read sdn vnet configuration."]
     #[doc = ""]
-    pub async fn get(&self, params: GetParams) -> Result<(), T::Error> {
+    pub async fn get(&self, params: GetParams) -> Result<GetOutput, T::Error> {
         let path = self.path.to_string();
         self.client.get(&path, &params).await
     }
@@ -64,6 +64,80 @@ pub struct DeleteParams {
     )]
     pub additional_properties: ::std::collections::HashMap<String, ::serde_json::Value>,
 }
+impl GetOutput {
+    pub fn new(ty: Type, vnet: String) -> Self {
+        Self {
+            ty,
+            vnet,
+            alias: ::std::default::Default::default(),
+            digest: ::std::default::Default::default(),
+            isolate_ports: ::std::default::Default::default(),
+            pending: ::std::default::Default::default(),
+            state: ::std::default::Default::default(),
+            tag: ::std::default::Default::default(),
+            vlanaware: ::std::default::Default::default(),
+            zone: ::std::default::Default::default(),
+            additional_properties: ::std::default::Default::default(),
+        }
+    }
+}
+#[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize)]
+pub struct GetOutput {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    #[doc = "Alias name of the VNet."]
+    #[doc = ""]
+    pub alias: Option<AliasStr>,
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    #[doc = "Digest of the VNet section."]
+    #[doc = ""]
+    pub digest: Option<String>,
+    #[serde(rename = "isolate-ports")]
+    #[serde(
+        serialize_with = "crate::types::serialize_bool_optional",
+        deserialize_with = "crate::types::deserialize_bool_optional"
+    )]
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    #[doc = "If true, sets the isolated property for all interfaces on the bridge of this VNet."]
+    #[doc = ""]
+    pub isolate_ports: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    #[doc = "Changes that have not yet been applied to the running configuration."]
+    #[doc = ""]
+    pub pending: Option<PendingGetOutputPending>,
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    #[doc = "State of the SDN configuration object."]
+    #[doc = ""]
+    pub state: Option<State>,
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    #[doc = "VLAN Tag (for VLAN or QinQ zones) or VXLAN VNI (for VXLAN or EVPN zones)."]
+    #[doc = ""]
+    pub tag: Option<TagInt>,
+    #[serde(rename = "type")]
+    #[doc = "Type of the VNet."]
+    #[doc = ""]
+    pub ty: Type,
+    #[serde(
+        serialize_with = "crate::types::serialize_bool_optional",
+        deserialize_with = "crate::types::deserialize_bool_optional"
+    )]
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    #[doc = "Allow VLANs to pass through this VNet."]
+    #[doc = ""]
+    pub vlanaware: Option<bool>,
+    #[doc = "Name of the VNet."]
+    #[doc = ""]
+    pub vnet: String,
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    #[doc = "Name of the zone this VNet belongs to."]
+    #[doc = ""]
+    pub zone: Option<String>,
+    #[serde(
+        flatten,
+        default,
+        skip_serializing_if = "::std::collections::HashMap::is_empty"
+    )]
+    pub additional_properties: ::std::collections::HashMap<String, ::serde_json::Value>,
+}
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]
 pub struct GetParams {
     #[serde(
@@ -82,6 +156,44 @@ pub struct GetParams {
     #[doc = "Display running config."]
     #[doc = ""]
     pub running: Option<bool>,
+    #[serde(
+        flatten,
+        default,
+        skip_serializing_if = "::std::collections::HashMap::is_empty"
+    )]
+    pub additional_properties: ::std::collections::HashMap<String, ::serde_json::Value>,
+}
+#[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]
+pub struct PendingGetOutputPending {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    #[doc = "Alias name of the VNet."]
+    #[doc = ""]
+    pub alias: Option<AliasStr>,
+    #[serde(rename = "isolate-ports")]
+    #[serde(
+        serialize_with = "crate::types::serialize_bool_optional",
+        deserialize_with = "crate::types::deserialize_bool_optional"
+    )]
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    #[doc = "If true, sets the isolated property for all interfaces on the bridge of this VNet."]
+    #[doc = ""]
+    pub isolate_ports: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    #[doc = "VLAN Tag (for VLAN or QinQ zones) or VXLAN VNI (for VXLAN or EVPN zones)."]
+    #[doc = ""]
+    pub tag: Option<TagInt>,
+    #[serde(
+        serialize_with = "crate::types::serialize_bool_optional",
+        deserialize_with = "crate::types::deserialize_bool_optional"
+    )]
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    #[doc = "Allow VLANs to pass through this VNet."]
+    #[doc = ""]
+    pub vlanaware: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    #[doc = "Name of the zone this VNet belongs to."]
+    #[doc = ""]
+    pub zone: Option<String>,
     #[serde(
         flatten,
         default,
@@ -139,6 +251,44 @@ pub struct PutParams {
         skip_serializing_if = "::std::collections::HashMap::is_empty"
     )]
     pub additional_properties: ::std::collections::HashMap<String, ::serde_json::Value>,
+}
+#[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, PartialEq)]
+#[doc = "State of the SDN configuration object."]
+#[doc = ""]
+pub enum State {
+    #[serde(rename = "changed")]
+    Changed,
+    #[serde(rename = "deleted")]
+    Deleted,
+    #[serde(rename = "new")]
+    New,
+}
+impl TryFrom<&str> for State {
+    type Error = String;
+    fn try_from(value: &str) -> Result<Self, <Self as TryFrom<&str>>::Error> {
+        match value {
+            "changed" => Ok(Self::Changed),
+            "deleted" => Ok(Self::Deleted),
+            "new" => Ok(Self::New),
+            v => Err(format!("Unknown variant {v}")),
+        }
+    }
+}
+#[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, PartialEq)]
+#[doc = "Type of the VNet."]
+#[doc = ""]
+pub enum Type {
+    #[serde(rename = "vnet")]
+    Vnet,
+}
+impl TryFrom<&str> for Type {
+    type Error = String;
+    fn try_from(value: &str) -> Result<Self, <Self as TryFrom<&str>>::Error> {
+        match value {
+            "vnet" => Ok(Self::Vnet),
+            v => Err(format!("Unknown variant {v}")),
+        }
+    }
 }
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
 pub struct TagInt(i128);

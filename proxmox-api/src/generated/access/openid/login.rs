@@ -20,10 +20,52 @@ where
 {
     #[doc = "Verify OpenID authorization code and create a ticket."]
     #[doc = ""]
-    pub async fn post(&self, params: PostParams) -> Result<(), T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<PostOutput, T::Error> {
         let path = self.path.to_string();
         self.client.post(&path, &params).await
     }
+}
+#[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]
+pub struct CapPostOutputCap {
+    #[serde(
+        flatten,
+        default,
+        skip_serializing_if = "::std::collections::HashMap::is_empty"
+    )]
+    pub additional_properties: ::std::collections::HashMap<String, ::serde_json::Value>,
+}
+impl PostOutput {
+    pub fn new(
+        csrfpreventiontoken: String,
+        cap: CapPostOutputCap,
+        ticket: String,
+        username: String,
+    ) -> Self {
+        Self {
+            csrfpreventiontoken,
+            cap,
+            ticket,
+            username,
+            clustername: ::std::default::Default::default(),
+            additional_properties: ::std::default::Default::default(),
+        }
+    }
+}
+#[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize)]
+pub struct PostOutput {
+    #[serde(rename = "CSRFPreventionToken")]
+    pub csrfpreventiontoken: String,
+    pub cap: CapPostOutputCap,
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub clustername: Option<String>,
+    pub ticket: String,
+    pub username: String,
+    #[serde(
+        flatten,
+        default,
+        skip_serializing_if = "::std::collections::HashMap::is_empty"
+    )]
+    pub additional_properties: ::std::collections::HashMap<String, ::serde_json::Value>,
 }
 impl PostParams {
     pub fn new(code: CodeStr, redirect_url: RedirectUrlStr, state: StateStr) -> Self {

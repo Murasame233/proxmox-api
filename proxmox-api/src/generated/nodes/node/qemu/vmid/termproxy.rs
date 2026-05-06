@@ -20,10 +20,31 @@ where
 {
     #[doc = "Creates a TCP proxy connections."]
     #[doc = ""]
-    pub async fn post(&self, params: PostParams) -> Result<(), T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<PostOutput, T::Error> {
         let path = self.path.to_string();
         self.client.post(&path, &params).await
     }
+}
+impl PostOutput {
+    pub fn new(port: i64, ticket: String, upid: String, user: String) -> Self {
+        Self {
+            port,
+            ticket,
+            upid,
+            user,
+        }
+    }
+}
+#[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize)]
+pub struct PostOutput {
+    #[serde(
+        serialize_with = "crate::types::serialize_int",
+        deserialize_with = "crate::types::deserialize_int"
+    )]
+    pub port: i64,
+    pub ticket: String,
+    pub upid: String,
+    pub user: String,
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]
 pub struct PostParams {

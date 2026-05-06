@@ -31,7 +31,7 @@ where
 {
     #[doc = "Get a node"]
     #[doc = ""]
-    pub async fn get(&self) -> Result<(), T::Error> {
+    pub async fn get(&self) -> Result<GetOutput, T::Error> {
         let path = self.path.to_string();
         self.client.get(&path, &()).await
     }
@@ -46,6 +46,55 @@ where
         let path = self.path.to_string();
         self.client.put(&path, &params).await
     }
+}
+impl GetOutput {
+    pub fn new(fabric_id: String, node_id: String, protocol: Protocol) -> Self {
+        Self {
+            fabric_id,
+            node_id,
+            protocol,
+            digest: ::std::default::Default::default(),
+            ip: ::std::default::Default::default(),
+            ip6: ::std::default::Default::default(),
+            lock_token: ::std::default::Default::default(),
+            additional_properties: ::std::default::Default::default(),
+        }
+    }
+}
+#[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize)]
+pub struct GetOutput {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    #[doc = "Prevent changes if current configuration file has a different digest. This can be used to prevent concurrent modifications."]
+    #[doc = ""]
+    pub digest: Option<DigestStr>,
+    #[doc = "Identifier for SDN fabrics"]
+    #[doc = ""]
+    pub fabric_id: String,
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    #[doc = "IPv4 address for this node"]
+    #[doc = ""]
+    pub ip: Option<::std::net::Ipv4Addr>,
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    #[doc = "IPv6 address for this node"]
+    #[doc = ""]
+    pub ip6: Option<::std::net::Ipv6Addr>,
+    #[serde(rename = "lock-token")]
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    #[doc = "the token for unlocking the global SDN configuration"]
+    #[doc = ""]
+    pub lock_token: Option<String>,
+    #[doc = "Identifier for nodes in an SDN fabric"]
+    #[doc = ""]
+    pub node_id: String,
+    #[doc = "Type of configuration entry in an SDN Fabric section config"]
+    #[doc = ""]
+    pub protocol: Protocol,
+    #[serde(
+        flatten,
+        default,
+        skip_serializing_if = "::std::collections::HashMap::is_empty"
+    )]
+    pub additional_properties: ::std::collections::HashMap<String, ::serde_json::Value>,
 }
 impl PutParams {
     pub fn new(protocol: Protocol) -> Self {

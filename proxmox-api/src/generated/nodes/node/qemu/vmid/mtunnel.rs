@@ -20,10 +20,25 @@ where
 {
     #[doc = "Migration tunnel endpoint - only for internal use by VM migration."]
     #[doc = ""]
-    pub async fn post(&self, params: PostParams) -> Result<(), T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<PostOutput, T::Error> {
         let path = self.path.to_string();
         self.client.post(&path, &params).await
     }
+}
+impl PostOutput {
+    pub fn new(socket: String, ticket: String, upid: String) -> Self {
+        Self {
+            socket,
+            ticket,
+            upid,
+        }
+    }
+}
+#[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize)]
+pub struct PostOutput {
+    pub socket: String,
+    pub ticket: String,
+    pub upid: String,
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]
 pub struct PostParams {

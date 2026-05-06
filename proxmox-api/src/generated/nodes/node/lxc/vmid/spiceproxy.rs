@@ -20,10 +20,42 @@ where
 {
     #[doc = "Returns a SPICE configuration to connect to the CT."]
     #[doc = ""]
-    pub async fn post(&self, params: PostParams) -> Result<(), T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<PostOutput, T::Error> {
         let path = self.path.to_string();
         self.client.post(&path, &params).await
     }
+}
+impl PostOutput {
+    pub fn new(host: String, password: String, proxy: String, tls_port: i64, ty: String) -> Self {
+        Self {
+            host,
+            password,
+            proxy,
+            tls_port,
+            ty,
+            additional_properties: ::std::default::Default::default(),
+        }
+    }
+}
+#[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize)]
+pub struct PostOutput {
+    pub host: String,
+    pub password: String,
+    pub proxy: String,
+    #[serde(rename = "tls-port")]
+    #[serde(
+        serialize_with = "crate::types::serialize_int",
+        deserialize_with = "crate::types::deserialize_int"
+    )]
+    pub tls_port: i64,
+    #[serde(rename = "type")]
+    pub ty: String,
+    #[serde(
+        flatten,
+        default,
+        skip_serializing_if = "::std::collections::HashMap::is_empty"
+    )]
+    pub additional_properties: ::std::collections::HashMap<String, ::serde_json::Value>,
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]
 pub struct PostParams {

@@ -20,10 +20,38 @@ where
 {
     #[doc = "Creates a TCP VNC proxy connections."]
     #[doc = ""]
-    pub async fn post(&self, params: PostParams) -> Result<(), T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<PostOutput, T::Error> {
         let path = self.path.to_string();
         self.client.post(&path, &params).await
     }
+}
+impl PostOutput {
+    pub fn new(cert: String, port: i64, ticket: String, upid: String, user: String) -> Self {
+        Self {
+            cert,
+            port,
+            ticket,
+            upid,
+            user,
+            password: ::std::default::Default::default(),
+        }
+    }
+}
+#[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize)]
+pub struct PostOutput {
+    pub cert: String,
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    #[doc = "Returned if requested with 'generate-password' param. Consists of printable ASCII characters ('!' .. '~')."]
+    #[doc = ""]
+    pub password: Option<String>,
+    #[serde(
+        serialize_with = "crate::types::serialize_int",
+        deserialize_with = "crate::types::deserialize_int"
+    )]
+    pub port: i64,
+    pub ticket: String,
+    pub upid: String,
+    pub user: String,
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]
 pub struct PostParams {

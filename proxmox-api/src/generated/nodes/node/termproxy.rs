@@ -20,10 +20,39 @@ where
 {
     #[doc = "Creates a VNC Shell proxy."]
     #[doc = ""]
-    pub async fn post(&self, params: PostParams) -> Result<(), T::Error> {
+    pub async fn post(&self, params: PostParams) -> Result<PostOutput, T::Error> {
         let path = self.path.to_string();
         self.client.post(&path, &params).await
     }
+}
+impl PostOutput {
+    pub fn new(port: i64, ticket: String, upid: String, user: String) -> Self {
+        Self {
+            port,
+            ticket,
+            upid,
+            user,
+        }
+    }
+}
+#[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize)]
+pub struct PostOutput {
+    #[serde(
+        serialize_with = "crate::types::serialize_int",
+        deserialize_with = "crate::types::deserialize_int"
+    )]
+    #[doc = "port used to bind termproxy to."]
+    #[doc = ""]
+    pub port: i64,
+    #[doc = "VNC ticket used to verify websocket connection."]
+    #[doc = ""]
+    pub ticket: String,
+    #[doc = "UPID for termproxy worker task."]
+    #[doc = ""]
+    pub upid: String,
+    #[doc = "user/token that generated the VNC ticket in `ticket`."]
+    #[doc = ""]
+    pub user: String,
 }
 #[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize, Default)]
 pub struct PostParams {

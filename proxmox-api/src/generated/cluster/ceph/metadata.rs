@@ -31,12 +31,14 @@ impl GetOutput {
         mgr: MgrGetOutputMgr,
         mon: MonGetOutputMon,
         node: NodeGetOutputNode,
+        osd: OsdGetOutputOsd,
     ) -> Self {
         Self {
             mds,
             mgr,
             mon,
             node,
+            osd,
             additional_properties: ::std::default::Default::default(),
         }
     }
@@ -55,6 +57,9 @@ pub struct GetOutput {
     #[doc = "Ceph version installed on the nodes."]
     #[doc = ""]
     pub node: NodeGetOutputNode,
+    #[doc = "OSDs configured in the cluster and their properties."]
+    #[doc = ""]
+    pub osd: OsdGetOutputOsd,
     #[serde(
         flatten,
         default,
@@ -268,6 +273,95 @@ pub struct IdGetOutputMonId {
     )]
     pub additional_properties: ::std::collections::HashMap<String, ::serde_json::Value>,
 }
+impl IdGetOutputOsdId {
+    pub fn new(
+        back_addr: String,
+        ceph_release: String,
+        ceph_version: String,
+        ceph_version_short: String,
+        device_id: String,
+        front_addr: String,
+        hostname: String,
+        id: i64,
+        mem_swap_kb: i64,
+        mem_total_kb: i64,
+        osd_data: String,
+        osd_objectstore: String,
+    ) -> Self {
+        Self {
+            back_addr,
+            ceph_release,
+            ceph_version,
+            ceph_version_short,
+            device_id,
+            front_addr,
+            hostname,
+            id,
+            mem_swap_kb,
+            mem_total_kb,
+            osd_data,
+            osd_objectstore,
+            additional_properties: ::std::default::Default::default(),
+        }
+    }
+}
+#[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize)]
+pub struct IdGetOutputOsdId {
+    #[doc = "Bind addresses and ports for backend inter OSD traffic."]
+    #[doc = ""]
+    pub back_addr: String,
+    #[doc = "Ceph release codename currently used."]
+    #[doc = ""]
+    pub ceph_release: String,
+    #[doc = "Version info currently used by the service."]
+    #[doc = ""]
+    pub ceph_version: String,
+    #[doc = "Short version (numerical) info currently used by the service."]
+    #[doc = ""]
+    pub ceph_version_short: String,
+    #[doc = "Devices used by the OSD."]
+    #[doc = ""]
+    pub device_id: String,
+    #[doc = "Bind addresses and ports for frontend traffic to OSDs."]
+    #[doc = ""]
+    pub front_addr: String,
+    #[doc = "Hostname on which the service is running."]
+    #[doc = ""]
+    pub hostname: String,
+    #[serde(
+        serialize_with = "crate::types::serialize_int",
+        deserialize_with = "crate::types::deserialize_int"
+    )]
+    #[doc = "OSD ID."]
+    #[doc = ""]
+    pub id: i64,
+    #[serde(
+        serialize_with = "crate::types::serialize_int",
+        deserialize_with = "crate::types::deserialize_int"
+    )]
+    #[doc = "Memory of the service currently in swap."]
+    #[doc = ""]
+    pub mem_swap_kb: i64,
+    #[serde(
+        serialize_with = "crate::types::serialize_int",
+        deserialize_with = "crate::types::deserialize_int"
+    )]
+    #[doc = "Memory consumption of the service."]
+    #[doc = ""]
+    pub mem_total_kb: i64,
+    #[doc = "Path to the OSD data directory."]
+    #[doc = ""]
+    pub osd_data: String,
+    #[doc = "OSD objectstore type."]
+    #[doc = ""]
+    pub osd_objectstore: String,
+    #[serde(
+        flatten,
+        default,
+        skip_serializing_if = "::std::collections::HashMap::is_empty"
+    )]
+    pub additional_properties: ::std::collections::HashMap<String, ::serde_json::Value>,
+}
 impl MdsGetOutputMds {
     pub fn new(_id: IdGetOutputMdsId) -> Self {
         Self {
@@ -367,6 +461,27 @@ pub struct NodeGetOutputNodeNode {
     #[doc = "Version info."]
     #[doc = ""]
     pub version: VersionGetOutputNodeNodeVersion,
+    #[serde(
+        flatten,
+        default,
+        skip_serializing_if = "::std::collections::HashMap::is_empty"
+    )]
+    pub additional_properties: ::std::collections::HashMap<String, ::serde_json::Value>,
+}
+impl OsdGetOutputOsd {
+    pub fn new(_id: IdGetOutputOsdId) -> Self {
+        Self {
+            _id,
+            additional_properties: ::std::default::Default::default(),
+        }
+    }
+}
+#[derive(Clone, Debug, :: serde :: Serialize, :: serde :: Deserialize)]
+pub struct OsdGetOutputOsd {
+    #[serde(rename = "{id}")]
+    #[doc = "Useful properties are listed, but not the full list."]
+    #[doc = ""]
+    pub _id: IdGetOutputOsdId,
     #[serde(
         flatten,
         default,
