@@ -102,6 +102,67 @@ pub struct Type<'a> {
         skip_serializing_if = "Option::is_none"
     )]
     pub key_alias: Option<Cow<'a, str>>,
+    #[serde(borrow, default, skip_serializing_if = "Option::is_none")]
+    pub properties: Option<BTreeMap<Cow<'a, str>, Type<'a>>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "additionalProperties"
+    )]
+    pub additional_properties: Option<IntOrTy<'a>>,
+}
+
+fn build_object_output<'a>(
+    properties: &Option<BTreeMap<Cow<'a, str>, Type<'a>>>,
+    additional_properties: &Option<IntOrTy<'a>>,
+    field_name: &str,
+    struct_suffix: &str,
+) -> Option<Output> {
+    let mut final_output = Output::new();
+
+    let field_name_ident = crate::name_to_ident(field_name);
+    let suffix = crate::name_to_ident(struct_suffix);
+    let struct_name = format!("{field_name_ident}{suffix}");
+
+    let additional_int_or_ty = additional_properties.as_ref().cloned().unwrap_or_default();
+    let (additional_props, ext) = additional_int_or_ty.as_additional_properties(struct_suffix);
+    final_output.module_defs.extend(ext);
+
+    if let Some(props) = properties {
+        let fields: Vec<_> = props
+            .iter()
+            .filter_map(|(original_name, ty)| {
+                let field_name = crate::name_to_ident(original_name);
+                let output = ty.type_def(&field_name, &format!("{struct_suffix}{field_name}"))?;
+                let inner = output.def.as_ref()?.clone();
+                final_output.absorb(output);
+
+                let doc = ty.doc();
+                let optional = ty.optional.get();
+
+                let field = FieldDef::new(original_name.to_string(), inner, optional, doc);
+
+                if let Some(numbered_items) = field.numbered_items() {
+                    final_output
+                        .module_defs
+                        .push(TypeDef::NumberedItems(Box::new(numbered_items.clone())));
+                }
+
+                Some(field)
+            })
+            .collect();
+
+        let def = TypeDef::new_struct(struct_name, fields, additional_props);
+        final_output.def = Some(def);
+
+        Some(final_output)
+    } else if !additional_props.is_none() {
+        let def = TypeDef::new_struct(struct_name, Vec::new(), additional_props);
+        final_output.def = Some(def);
+        Some(final_output)
+    } else {
+        None
+    }
 }
 
 impl Type<'_> {
@@ -209,61 +270,25 @@ impl Type<'_> {
 
                     return Some(output);
                 }
-                TypeKind::Object {
-                    properties,
-                    additional_properties,
-                } => {
-                    let mut final_output = Output::new();
-
-                    let field_name = crate::name_to_ident(field_name);
-                    let suffix = crate::name_to_ident(struct_suffix);
-                    let struct_name = format!("{field_name}{suffix}");
-                    let mut all_external = Vec::new();
-
-                    let (additional_props, ext) =
-                        additional_properties.as_additional_properties(struct_suffix);
-
-                    all_external.extend(ext);
-
-                    if let Some(props) = properties {
-                        let fields: Vec<_> = props
-                            .iter()
-                            .filter_map(|(original_name, ty)| {
-                                let field_name = crate::name_to_ident(original_name);
-                                let output = ty.type_def(
-                                    &field_name,
-                                    &format!("{struct_suffix}{field_name}"),
-                                )?;
-                                let inner = output.def.as_ref()?.clone();
-                                final_output.absorb(output);
-
-                                let doc = ty.doc();
-                                let optional = ty.optional.get();
-
-                                let field =
-                                    FieldDef::new(original_name.to_string(), inner, optional, doc);
-
-                                if let Some(numbered_items) = field.numbered_items() {
-                                    final_output.module_defs.push(TypeDef::NumberedItems(
-                                        Box::new(numbered_items.clone()),
-                                    ));
-                                }
-
-                                Some(field)
-                            })
-                            .collect();
-
-                        let def = TypeDef::new_struct(struct_name, fields, additional_props);
-                        final_output.def = Some(def);
-
-                        return Some(final_output);
-                    } else if !additional_props.is_none() {
-                        TypeDef::new_struct(struct_name, Vec::new(), additional_props)
-                    } else {
-                        return None;
-                    }
+                TypeKind::Object => {
+                    // explicit "object" return type variant
+                    return build_object_output(
+                        &self.properties,
+                        &self.additional_properties,
+                        field_name,
+                        struct_suffix,
+                    );
                 }
             }
+        } else if self.properties.is_some() || self.additional_properties.is_some() {
+            // implicit "object" return type variant
+            log::debug!("encountered implicit object");
+            return build_object_output(
+                &self.properties,
+                &self.additional_properties,
+                field_name,
+                struct_suffix,
+            );
         } else {
             return None;
         };
@@ -331,6 +356,7 @@ impl Default for IntOrTy<'_> {
 
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 #[serde(tag = "type", rename_all = "kebab-case")]
+#[serde(bound(deserialize = "'de: 'a"))]
 pub enum TypeKind<'a> {
     String {
         #[serde(rename = "maxLength", default, skip_serializing_if = "Option::is_none")]
@@ -401,14 +427,11 @@ pub enum TypeKind<'a> {
     Array {
         items: Box<Type<'a>>,
     },
-    Object {
-        #[serde(borrow, default, skip_serializing_if = "Option::is_none")]
-        properties: Option<BTreeMap<Cow<'a, str>, Type<'a>>>,
-        #[serde(
-            default,
-            skip_serializing_if = "IntOrTy::is_unset",
-            rename = "additionalProperties"
-        )]
-        additional_properties: IntOrTy<'a>,
-    },
+    /// "properties" and "additional_properties", which would normally
+    /// be here, have been lifted into the parent `Type<'a>` to handle
+    /// cases where there is no "type" property specified.
+    ///
+    /// This variant is effectively now just a marker that the schema
+    /// contained an explicit `"type" : "object"`.
+    Object,
 }
