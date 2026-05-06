@@ -9,7 +9,7 @@ pub struct Returns<'a> {
     #[serde(borrow, flatten, default, skip_serializing_if = "Option::is_none")]
     pub ty: Option<Type<'a>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub link: Option<Link<'a>>,
+    pub links: Option<Link<'a>>,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
