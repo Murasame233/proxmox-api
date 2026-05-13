@@ -63,11 +63,13 @@ impl AuthState {
 
         inner.auth_ticket = Some(ticket);
         inner.csrf_token = Some(csrf);
-        inner.auth_ticket_time = Instant::now();
+        inner.auth_ticket_refresh_time = Instant::now() + Duration::from_secs(60 * 60);
     }
 
     pub fn should_refresh(&self) -> bool {
-        self.inner.read().auth_ticket_time.elapsed() > Duration::from_secs(60 * 60)
+        Instant::now()
+            .checked_duration_since(self.inner.read().auth_ticket_refresh_time)
+            .is_some()
     }
 
     pub fn auth_ticket(&self) -> Option<String> {
@@ -103,7 +105,7 @@ impl AuthState {
 #[derive(Debug)]
 struct Inner {
     auth_ticket: Option<String>,
-    auth_ticket_time: Instant,
+    auth_ticket_refresh_time: Instant,
     csrf_token: Option<String>,
     api_token: Option<String>,
 }
@@ -112,7 +114,7 @@ impl Inner {
     pub fn new() -> Self {
         Self {
             auth_ticket: None,
-            auth_ticket_time: Instant::now() - Duration::from_secs(24 * 60 * 60),
+            auth_ticket_refresh_time: Instant::now(),
             csrf_token: None,
             api_token: None,
         }
